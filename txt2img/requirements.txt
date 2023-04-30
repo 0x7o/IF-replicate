@@ -1,0 +1,16 @@
+accelerate==0.18.0
+beautifulsoup4==4.12.2
+bitsandbytes==0.38.1
+diffusers==0.16.0
+ftfy==6.1.1
+gradio==3.27.0
+huggingface_hub==0.14.1
+numpy==1.24.3
+Pillow==9.5.0
+safetensors==0.3.0
+sentencepiece==0.1.98
+tokenizers==0.13.3
+torch==2.0.0
+torchvision==0.15.1
+tqdm==4.65.0
+transformers==4.28.1

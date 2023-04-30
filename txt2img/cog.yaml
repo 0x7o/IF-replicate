@@ -1,0 +1,6 @@
+build:
+  cuda: "12.0"
+  gpu: true
+  python_version: "3.8"
+  python_requirements: "requirements.txt"
+predict: "predict.py:Predictor"
