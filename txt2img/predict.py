@@ -25,7 +25,6 @@ class Predictor(BasePredictor):
             variant="fp16",
             torch_dtype=torch.float16,
         ).to("cuda")
-        """
         safety_modules = {
             "feature_extractor": self.stage_1.feature_extractor,
             "safety_checker": self.stage_1.safety_checker,
@@ -34,15 +33,13 @@ class Predictor(BasePredictor):
         self.stage_3 = DiffusionPipeline.from_pretrained(
             "stabilityai/stable-diffusion-x4-upscaler",
             **safety_modules,
-            torch_dtype=torch.float16
-        )"""
+            torch_dtype=torch.float16,
+        ).to("cuda")
 
     def predict(
         self,
         prompt: str = Input(description="Input prompt", default="A painting of a cat"),
-        negative_prompt: str = Input(
-            description="Specify things to not see in the output", default=None
-        ),
+        negative_prompt: str = "",
         num_inference_steps: int = Input(
             description="Number of inference steps",
             default=50,
@@ -52,23 +49,29 @@ class Predictor(BasePredictor):
         num_outputs: int = Input(
             description="Number of images to output.",
             ge=1,
-            le=4,
+            le=5,
             default=1,
         ),
         seed: int = Input(
-            description="Random seed. Leave blank to randomize the seed", default=0
+            description="Random seed. Leave 0 to randomize the seed",
+            default=0,
+            ge=0,
+            le=2**32 - 1,
         ),
         guidance_scale: float = Input(
             description="Guidance scale", default=7.0, ge=0.0, le=10.0
         ),
+        stage3_upscale: bool = Input(
+            description="Use 1024x1024 upscaler", default=False
+        ),
     ) -> List[Path]:
-        prompt_embeds, negative_embeds = self.stage_1.encode_prompt(
-            prompt, negative_prompt, device="cuda"
-        )
         paths = []
+        seed = random.randint(0, 2**32 - 1) if seed == 0 else seed
+        generator = torch.Generator(device="cuda").manual_seed(seed)
+        prompt_embeds, negative_embeds = self.stage_1.encode_prompt(
+            prompt=prompt, negative_prompt=negative_prompt, device="cuda"
+        )
         for n in range(num_outputs):
-            seed = random.randint(0, 2**16 - 1) if seed == 0 else seed
-            generator = torch.manual_seed(seed)
             image = self.stage_1(
                 prompt_embeds=prompt_embeds,
                 negative_prompt_embeds=negative_embeds,
@@ -80,14 +83,27 @@ class Predictor(BasePredictor):
             image = self.stage_2(
                 image=image,
                 prompt_embeds=prompt_embeds,
-                negative_prompt_embeds=negative_embeds
-                if negative_prompt is not None
-                else None,
-                do_classifier_free_guidance=True,
+                negative_prompt_embeds=negative_embeds,
+                guidance_scale=4.0,
                 generator=generator,
                 output_type="pt",
-                num_inference_steps=75,
+                num_inference_steps=50,
+                noise_level=250,
             ).images
-            pt_to_pil(image)[0].save(f"/tmp/out-{n}.png")
+            if stage3_upscale:
+                image = self.stage_3(
+                    image=image,
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    num_images_per_prompt=1,
+                    guidance_scale=9.0,
+                    num_inference_steps=75,
+                    generator=generator,
+                    noise_level=100,
+                ).images
+                image = image[0]
+            else:
+                image = pt_to_pil(image)[0]
+            image.save(f"/tmp/out-{n}.png")
             paths.append(Path(f"/tmp/out-{n}.png"))
         return paths
