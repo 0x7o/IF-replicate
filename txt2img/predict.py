@@ -38,16 +38,16 @@ class Predictor(BasePredictor):
             le=2**32 - 1,
         ),
         aug_level: float = Input(
-            description="Adds additional augmentation to generate more realistic images", default=0.25, ge=0.0, le=1.0
+            description="Adds additional augmentation to generate more realistic images",
+            default=0.25,
+            ge=0.0,
+            le=1.0,
         ),
         guidance_scale: float = Input(
             description="Guidance scale", default=7.0, ge=0.0, le=10.0
         ),
         aspect_ratio: str = Input(
             description="Aspect ratio of the output image", default="1:1"
-        ),
-        stage3_upscale: bool = Input(
-            description="Use 1024x1024 upscaler", default=False
         ),
     ) -> List[Path]:
         paths = []
