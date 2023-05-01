@@ -82,7 +82,7 @@ class Predictor(BasePredictor):
             le=2**32 - 1,
         ),
         guidance_scale: float = Input(
-            description="Guidance scale", default=10.0, ge=0.0, le=15.0
+            description="Guidance scale", default=7.0, ge=0.0, le=10.0
         ),
         stage3_upscale: bool = Input(
             description="Use 1024x1024 upscaler", default=False
@@ -95,7 +95,7 @@ class Predictor(BasePredictor):
             prompt=prompt, negative_prompt=negative_prompt, device="cuda"
         )
         original_image = self.resize_image(Image.open(original_image).convert("RGB"))
-        mask_image = self.resize_image(Image.open(mask_image))
+        mask_image = self.resize_image(Image.open(mask_image).convert("RGB"))
         for n in range(num_outputs):
             image = self.stage_1(
                 image=original_image,
@@ -117,7 +117,7 @@ class Predictor(BasePredictor):
                 generator=generator,
                 output_type="pt",
                 num_inference_steps=50,
-                noise_level=250,
+                noise_level=100,
             ).images
             if stage3_upscale:
                 image = self.stage_3(
