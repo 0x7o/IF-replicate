@@ -37,12 +37,6 @@ class Predictor(BasePredictor):
             ge=0,
             le=2**32 - 1,
         ),
-        aug_level: float = Input(
-            description="Adds additional augmentation to generate more realistic images",
-            default=0.25,
-            ge=0.0,
-            le=1.0,
-        ),
         guidance_scale: float = Input(
             description="Guidance scale", default=7.0, ge=0.0, le=10.0
         ),
@@ -60,7 +54,6 @@ class Predictor(BasePredictor):
             disable_watermark=True,
             negative_prompt=negative_prompt,
             style_prompt=style_prompt,
-            aug_level=aug_level,
             aspect_ratio=aspect_ratio,
             prompt=[prompt] * num_outputs,
             seed=seed,

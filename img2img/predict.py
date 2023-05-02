@@ -54,12 +54,12 @@ class Predictor(BasePredictor):
             le=2**32 - 1,
         ),
         guidance_scale: float = Input(
-            description="Guidance scale", default=7.0, ge=0.0, le=10.0
+            description="Guidance scale", default=10.0, ge=0.0, le=15.0
         ),
     ) -> List[Path]:
         paths = []
         seed = random.randint(0, 2**32 - 1) if seed == 0 else seed
-        original_image = self.resize_image(Image.open(original_image).convert("RGB"))
+        original_image = Image.open(original_image).convert("RGB")
         result = style_transfer(
             t5=self.t5,
             if_I=self.if_I,
@@ -72,7 +72,7 @@ class Predictor(BasePredictor):
             prompt=[prompt] * num_outputs,
             seed=seed,
             if_I_kwargs={
-                "guidance_scale": 10.0,
+                "guidance_scale": guidance_scale,
                 "sample_timestep_respacing": "10,10,10,10,10,10,10,10,0,0",
                 "support_noise_less_qsample_steps": 5,
             },
