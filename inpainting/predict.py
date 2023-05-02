@@ -62,7 +62,7 @@ class Predictor(BasePredictor):
         paths = []
         seed = random.randint(0, 2**32 - 1) if seed == 0 else seed
         original_image = self.resize_image(Image.open(original_image).convert("RGB"))
-        mask_image = self.resize_image(Image.open(mask_image).convert("RGB"))
+        mask_image = Image.open(mask_image).convert("RGB").resize(64, 64)
         result = inpainting(
             t5=self.t5,
             if_I=self.if_I,
