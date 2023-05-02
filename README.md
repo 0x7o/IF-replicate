@@ -12,14 +12,17 @@ The goal of this repository is to offer an easy-to-use interface with Replicate,
 
 ### Text-to-Image
 
+![](https://res.cloudinary.com/dstoqk2ei/image/upload/v1683026527/out-0_towwtr.png)
 The Text-to-Image mode allows you to generate high-quality, photorealistic images based on your text prompts. This mode uses the state-of-the-art DeepFloyd IF model for synthesizing images.
 
 ### Image-to-Image (In Process)
 
+![](https://res.cloudinary.com/dstoqk2ei/image/upload/v1683026372/IF-replicate/vasyohn92yzwbtzibsnr.jpg)
 The Image-to-Image mode is currently in development. Once completed, it will enable users to perform style transfer, image translation, and other image manipulation tasks using a single model.
 
 ### Inpainting (In Progress)
 
+![](https://res.cloudinary.com/dstoqk2ei/image/upload/v1683026479/deep_floyd_if_inpainting_ezrndk.gif)
 The Inpainting mode is also in progress. When finished, it will allow users to fill in missing areas of an image or remove unwanted objects, with the model seamlessly generating the missing content.
 
 ## Contributing
