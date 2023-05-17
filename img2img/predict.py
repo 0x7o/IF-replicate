@@ -67,8 +67,8 @@ class Predictor(BasePredictor):
             if_III=self.if_III,
             disable_watermark=True,
             support_pil_img=original_image,
-            negative_prompt=negative_prompt,
-            style_prompt=style_prompt,
+            negative_prompt=[negative_prompt] * num_outputs,
+            style_prompt=[style_prompt] * num_outputs,
             prompt=[prompt] * num_outputs,
             seed=seed,
             if_I_kwargs={

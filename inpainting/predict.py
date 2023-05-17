@@ -70,7 +70,7 @@ class Predictor(BasePredictor):
             if_III=self.if_III,
             disable_watermark=True,
             support_pil_img=original_image,
-            negative_prompt=negative_prompt,
+            negative_prompt=[negative_prompt] * num_outputs,
             inpainting_mask=mask_image,
             prompt=[prompt] * num_outputs,
             seed=seed,
