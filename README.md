@@ -31,7 +31,7 @@ I welcome contributions to the IF-Replicate repository. If you are interested in
 
 ## License
 
-The code for this project is released under the [DeepFloyd model license.](LICENSE).
+The code for this project is released under the [DeepFloyd license.](LICENSE).
 
 ## Acknowledgments
 
